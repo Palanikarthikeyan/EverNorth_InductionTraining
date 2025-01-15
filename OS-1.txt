@@ -1,0 +1,376 @@
+
+OS -> system software
+|
+Kernel ->Core part of an OS
+
++------------------+
+| User
++------------------+
+| OS (Kernel)
++------------------+
+| H/W
++------------------+
+
+Kernel -> File, Process
+
+File -> Data ->Under the storage 
+Process ->Data ->Under the CPU
+			    |->fetch the data from memory
+			    |->stores to register
+			    |->execute //process 
+
+shell - interface between user and kernel
+-----
+
+shell types
+-------------
+1. Bourne Shell (sh)
+2. Korn Shell (ksh)
+3. CSheel (CSH)
+|
+4. BourneAgainShell(BASH) - default shell in Linux 
+		     |-->GNUProject
+
+
+
+User ->[command]-->shell -->Kernel ->H/W
+----------------   =====   -------   -----
+
+#######################################################
+Linux Boot process
+-------------------
+OFF ->Switch On PC =>POST(PowerOnSelfTest) =>MBR(MasterBootRecord) =>BootLoader
+
+BootLoader =>Load the kernel from HD ->memory =>Kernel =>Process(systemd PID:1)
+								(init PID:1)//oldversion
+							    |
+							 started automatically
+							    |
+							login(?) <or> getty (?)
+							    |
+							 Shell(CLI) Vs Desktop(GUI)
+							    |_______________|
+								 |
+								User IO <==
+--------------------------------------------------------------------------
+
+Login as: userA				Login as: userB
+password:				password:
+						|
+|						userB@hostname~]$
+userA@hostname~]$
+-------------------//primary prompt
+					Login as: root
+~ <-- login directory 			password:
+					|
+					root@hostname~]#
+					-------------------//primary prompt
+--------------------------------------------------------------------------
+		   /
+		   |
+ ---------------------------------------
+ |  	|   |       |       |    |         
+/bin /etc   /root  /home   /dev  /var
+
+
+Login as: root		Login as: arun	    Login as:userA
+password:		password:	    password:
+					
+root@host~]# pwd	arun@host~]$ pwd    userA@host~]$ pwd
+/root			/home/arun	    /home/userA
+
+
+https://labs.dmrtechcloud.com
+
+
+Password: Admin@123
+----------------------------------
+
+user@hostname~]$ <command>
+		 ---------
+
+		 <command><space>-<Char>
+				     |--->option
+
+	uname
+	uname -r
+	uname -s
+	uname -a
+	uname -n
+uname -rs (or) uname -sr <== we can combine multiple options any order
+
+man <command>
+-----------------------------------------------
+ls
+ls /bin
+ls /etc
+ls /dev
+
+ls /home
+
+ls /
+
+/bin
+/usr/bin
+/sbin
+-------------//
+
+/bin/<file-command>  <== Linux internal commands 
+     .............
+	 |<-- any user (root and non-root) can able to access
+
+/usr/bin/<file-command> <== Linux external commands
+
+/sbin/<file-command> <== root user only can able to run
+	|->administrative commands
+
+-----------------------------------------
+/etc - configuration file
+
+/dev - device files
+
+/boot - boot loader files
+
+/var
+   |->log/
+	|___log files
+   |->www/
+	|__webserver
+   |->mail/
+	|__mail location
+	..
+#####################################################################
+
+
+
+mkdir <dir1>
+mkdir <dir1> <dir2>
+mkdir -p <d1>/<d2>/<d3>/<d4>/<d5>
+
+cd <dir>
+
+ls <dir>
+ls -R <dir>
+
+cp -r <oldDir> <newDir>
+mv oldDir newDir - rename
+mv oldDir1 oldDir2 - move (cut ->paste)
+
+rmdir <dir>
+rm -r <dir>
+
+#################################################
+
+Linux - File,Process
+|
+File
+File structure - tree structure
+|
+File Types
+==========
+1. Regular File (or) Ordinary File
+    |
+    |--->a. ASCII (or) TEXT (p1.json,p1.java,p1.c,p1.cpp,p1.py,p1.log...)
+    |--->b. ELF  
+
+2. Directory 
+
+3. Link file (or) symbolic link (or) softlink 
+
+4. Device files
+	|-------->a. Character type device (ex: keyboard,printer,terminal)
+        |-------->b. Block type device (ex: HD,USB,CDROM,SSD)
+5. named pipe (or) FIFO 
+6. socket file
+
+file <filename> - determine file type
+---------------
+
+vi <filename>
+--
+
+vi filename{Enter}
++------------------+
+|   
+|  command mode - Save,Save As,Insert,copy,delete...
+|
++------------------+
+     |
+   press i
+     |
++-------------------+
+|
+|   Insert mode - type your text
++-------------------+
+    |
+  press ESC =>command mode
+		
+	ESC :w {Enter}  - Save
+	|
+	
+
+:w - write
+:wq - write and quit
+:q! - force to quit
+-----------------------------------
+
+ESC -> yy (yank - copy)
+       p (paste)
+
+
+ESC -> Nyy -> 3yy ->3lines are copied
+	      5yy -->5lines are copied
+		
+ESC -> dd line delete
+       3dd -->3lines are deleted
+------------------------------------
+
+yy & p -> copy and paste
+dd & p -> cut and paste
+-----------------------------------------------
+yy - line copy
+
+yw - word copy
+
+3yw - 3 words are copied  & p ->paste
+
+dd - current line will delete
+|
+3dd - 3lines are deleted
+|
+3dw - 3words are deleted
+
+x - delete character 
+3x - delete 3 chars 
+
+
+copy				Vs	    delete
+-----					    ---------
+yy  - line copy				dd - line delete
+3yy - 3 lines are copied		3dd - 3lines are deleted
+yw - word copy				dw - word delete
+3yw - 3 words are copied		3dw - 3words are deleted
+-----					x - character delete
+					3x - 3chars are deleted
+					------
+##############################################################
+
+Task:
+|
+|--> vi emp.csv 
+
+    101,raj,sales,pune,1000
+    202,anu,HR,hyd,2000
+    
+###############################################################
+
+cp oldFile newFile 
+			cp emp.csv t1.csv <== (1)
+mkdir D1
+cp oldFile Directory -> cp emp.csv D1  <== (2)
+				   ---
+			cp emp.csv D1/e1.csv <==(3)
+--------------------------------------------------------
+mv oldFile newFile - rename  
+mv emp.csv EMP.csv - rename
+
+mv oldFile <directory> - move
+mv emp.csv D1 # move the emp.csv file to D1 directory
+--------------------------------------------------------
+To delete a reg.file
+
+rm <filename>
+---------------------------------------------------------
+
+DirectoryFile - commands	Vs	RegularFile - commands
+------------------------		-----------------------
+mkdir <dir>				vi <filename>
+mkdir -p <dir1>/<dir2>			cat <filename>
+cd <dir>				
+cd ..					cp oldFile newFile
+ls -R <dir>				|
+					mv oldFile newFile - rename
+cp -r oldDir newDir			mv oldFile <directory> - move
+mv oldDir newDir   - rename		
+mv oldDir1 oldDir2 - move		rm <filename>
+					------------------------------
+rmdir <dir>
+rm -r <dir>
+---------------------------
+
+#########################################################################
+
+ls
+ 
+ls -r <== reverse order
+ls -R <== recursive list
+ls -l <== long list 
+ls -t <== recently created files 
+ls -d <directory> 
+ls -ld <directory> - directory details
+ls -ltr 
+ls -a <== all the files (including hidden files)
+----------------------------------------------------------------------
+wc - word count
+
+wc <filename>
+
+wc -l <filename> - get total no.of lines
+wc -w <filename> - get total no.of words
+wc -c <filename> - get total no.of chars
+
+------
+gzip <filename>
+|
+gunzip <filename.gz> 
+------------
+
+gzip p1 
+p1.gz
+|
+cat p1.gz 		Vs    zcat p1.gz
+ <not readable format>		<we can read the content>
+
+unzip p1.gz  # unzip a reg.file
+cat p1 {Enter}
+<we can read the content>
+----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
