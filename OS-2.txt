@@ -1,0 +1,701 @@
+File     - Data - Under the storage unit
+Process  - Data - Under the CPU
+
+		process(ps)
+		  |
+-----------------------------------------
+|					|
+User process				System process
+\__ by user				 |-> by systemD_(pid:1) 
+\__ TTY:pts/<port>			 |-> TTY: ?
+\__ after login - shell - User IO	 |-> before login our session
+\__ parent is working shell              |-> parent is systemd_(pid:1)
+\__ start ->Running ---->Exit		 |-> start ->R+
+	     | | resume				     ---//background
+	   stopped			 |-> daemon (or) service 
+
+ps
+ps -e (or) ps -A
+
+ps -e|more ; q <== quit
+
+like 
+ |-> ls -l
+
+   ps -l
+
+nice (NI)
+---------
+  |->   -20 to 20
+
+ -20 -19 -18 .. -2 -1 0 1 2 .. 19 20
+ -------------------    --------------
+   High priority	 Low priority 
+		 
+NI ->0 default nice value
+
+
+ps -f
+karthikeyan@example:~$ ps
+  PID TTY          TIME CMD
+ 3308 pts/1    00:00:00 bash
+ 4184 pts/1    00:00:00 ps
+karthikeyan@example:~$ ps
+  PID TTY          TIME CMD
+ 3308 pts/1    00:00:00 bash
+ 4275 pts/1    00:00:00 ps
+karthikeyan@example:~$ ps
+  PID TTY          TIME CMD
+ 3308 pts/1    00:00:00 bash
+ 4277 pts/1    00:00:00 ps
+karthikeyan@example:~$ ps -l
+F S   UID   PID  PPID  C PRI  NI ADDR SZ WCHAN  TTY          TIME CMD
+0 S  1000  3308  3307  0  80   0 -  7445 wait   pts/1    00:00:00 bash
+0 R  1000  4317  3308  0  80   0 -  9004 -      pts/1    00:00:00 ps
+karthikeyan@example:~$ ps -f
+UID        PID  PPID  C STIME TTY          TIME CMD
+karthik+  3308  3307  0 11:26 pts/1    00:00:00 -bash
+karthik+  4365  3308  0 12:21 pts/1    00:00:00 ps -f
+karthikeyan@example:~$
+-------------------------------------------------------------
+ps
+ps -e (or) ps -A
+ps -l
+ps -f <== STIME - process start up time
+ps -elf|more
+
+ps -a
+
+top
+<command> &
+jobs
+
+fg %<eventID>
+
+ctrl +C  Vs  ctrl +Z
+
+kill -9 <PID>
+uptime
+-------------------------------------------------
+|
+Task:
+  |-> open two terminal
+      |
+      terminal-1 	|--> terminal-2
+      ------------	     -------------
+      vi p1.txt{enter}	      |-> find - pid of vi 
+				  kill a vi process
+-----------------------------------------------------
+			
+top -p <pid>
+
+k {Enter}
+|
+press {enter}
+|
+9 {Enter}
+|________________Signal number
+
+####################################################################
+File Permission
+---------------
+ File (F)
+ --------
+      |----> 3 users
+	     --------
+		|-> user (or) author (or) owner u
+		|-> group  g
+		|-> others o
+
+sales    prod     test <== groupName
+|        |         |
+arun     raj       kumar
+tom      leo       anu
+
+login : raj
+password:
+
+raj@host~]$ vi p1.txt
+..
+:wq
+raj@host~]$ ls -l p1.txt
+ ...     <raj> <prod>   p1.txt
+
+each user can do 3 operation(mode)
+		 -----------------
+		  read - r
+		  write - w
+		  execute - x
+user(u)
+-------
+ |->rwx
+group(g)
+--------
+ |->rwx
+ others(o)
+ ----------
+  |->rwx
+
+ls -l
+
+<char><file-permission>
+  |	rw-r--r--
+  |
+  |__ FileType
+
+
+-rw-r-xr-- userA sales 150  ... p1.txt <==
+
+###################################################
+
+chmod - to change the file permission
+-----
+chmod user_details + <mode>  filename
+		   -
+
++ => To assign a file permission
+- => To remove an existing permission
+
+To assign execute permission to user
+------------------------------------
+chmod u+x <filename>
+
+To assign execute permission to user,group
+------------------------------------
+chmod ug+x <filename>
+
+To assign execute permission to user,group,others
+------------------------------------
+chmod ugo+x <filename> (or) chmod a+x <filename> (or) chmod +x filename
+
+
+karthikeyan@example:~$ echo Hello Unix world
+Hello Unix world
+karthikeyan@example:~$ echo "Hello Unix world"
+Hello Unix world
+karthikeyan@example:~$ echo
+
+karthikeyan@example:~$
+karthikeyan@example:~$ clear
+karthikeyan@example:~$ vi ab.txt
+karthikeyan@example:~$ ls -l ab.txt
+-rw-rw-r-- 1 karthikeyan karthikeyan 183 Jan 16 15:42 ab.txt
+karthikeyan@example:~$ chmod u+x ab.txt
+karthikeyan@example:~$ ls -l ab.txt
+-rwxrw-r-- 1 karthikeyan karthikeyan 183 Jan 16 15:42 ab.txt
+karthikeyan@example:~$ cat -n ab.txt
+     1  echo "My working kernel name:"
+     2  uname
+     3  echo "Kernel version is:"
+     4  uname -r
+     5  sleep 3
+     6  echo "My system CPU LoadBalance:"
+     7  uptime
+     8  echo
+     9  echo "My Login name is:"
+    10  whoami
+    11  sleep 4
+    12  echo "Thank you"
+karthikeyan@example:~$ ./ab.txt
+My working kernel name:
+Linux
+Kernel version is:
+5.4.0-42-generic
+My system CPU LoadBalance:
+ 15:44:09 up  4:54,  1 user,  load average: 0.08, 0.06, 0.02
+
+My Login name is:
+karthikeyan
+Thank you
+karthikeyan@example:~$
+karthikeyan@example:~$ ./ab.txt
+My working kernel name:
+Linux
+Kernel version is:
+5.4.0-42-generic
+My system CPU LoadBalance:
+ 15:48:47 up  4:59,  1 user,  load average: 0.00, 0.02, 0.00
+
+My Login name is:
+karthikeyan
+Thank you
+karthikeyan@example:~$ cd /etc
+karthikeyan@example:/etc$
+karthikeyan@example:/etc$ ./ab.txt
+-bash: ./ab.txt: No such file or directory
+karthikeyan@example:/etc$
+karthikeyan@example:/etc$ /home/karthikeyan/ab.txt
+My working kernel name:
+Linux
+Kernel version is:
+5.4.0-42-generic
+My system CPU LoadBalance:
+ 15:49:46 up  5:00,  1 user,  load average: 0.00, 0.01, 0.00
+
+My Login name is:
+karthikeyan
+Thank you
+karthikeyan@example:/etc$
+#######################################################################
+
+1) symbolic mode 
+------------------
+chmod user_details + mode    <filename>
+		   -
+
+2) octal mode
+--------------
+	4	2	1
+	r	w	x
+	1	1	1	=>   7
+	1	1	0	=>   6
+	1	0	1	=>   5
+	1	0	0	=>   4
+	0	0	0	=>   0
+
+chmod 764 ab.txt
+      |||______________r--(others)
+      ||___rw-(group)     
+     rwx      
+     (user)
+---------------------------------------------------------------
+Go to login path -> cd {Enter}
+|
+vi test1.txt{enter}
+
+echo "File name:test1.txt and process name:test1.txt"
+sleep 300
+
+:wq
+|
+chmod a+x test1.txt
+|
+./test1.txt & {Enter} <--- File and Process
+[eventID] <PID>
+
+ps {Enter}
+
+ps -f {Enter}
+
+###########################################################
+<command>|less
+<command>|more
+<command>|head <== from top to bottom default 10 lines
+
+<command>|head -n LineNumber 
+
+<command>|tail <== from bottom to top default 10 lines
+
+karthikeyan@example:~$ ps -e|head -n 3
+  PID TTY          TIME CMD
+    1 ?        00:00:11 systemd
+    2 ?        00:00:00 kthreadd
+karthikeyan@example:~$
+karthikeyan@example:~$ ps -e|tail
+ 7717 ?        00:00:00 snapd
+ 7723 ?        00:00:00 systemd-timesyn
+ 7727 ?        00:00:00 systemd-resolve
+ 7728 ?        00:00:00 systemd-logind
+ 7729 ?        00:00:00 systemd-udevd
+ 7907 ?        00:00:00 kworker/u2:0-ev
+ 7943 ?        00:00:00 kworker/0:0-eve
+ 7959 ?        00:00:00 kworker/u2:2-ev
+ 7976 pts/1    00:00:00 ps
+ 7977 pts/1    00:00:00 bash
+karthikeyan@example:~$
+karthikeyan@example:~$ ps -e|tail -n 5
+ 7907 ?        00:00:00 kworker/u2:0-ev
+ 7943 ?        00:00:00 kworker/0:0-eve
+ 7959 ?        00:00:00 kworker/u2:2-ev
+ 7978 pts/1    00:00:00 ps
+ 7979 pts/1    00:00:00 tail
+karthikeyan@example:~$
+##################################################################
+
+grep - search a pattern from input(file <or> PIPE)
+-----
+grep -option pattern inputFile
+
+
+karthikeyan@example:~$ whatis grep
+grep (1)             - print lines matching a pattern
+karthikeyan@example:~$
+karthikeyan@example:~$ #grep <pattern> InputFile
+karthikeyan@example:~$
+karthikeyan@example:~$ grep sales emp.csv
+101,ram,sales,pune,1000
+236,leo,sales,bglore,4000
+953,bibu,sales,mumbai,6500
+karthikeyan@example:~$
+karthikeyan@example:~$ grep dba emp.csv
+karthikeyan@example:~$
+karthikeyan@example:~$ cat emp.csv
+101,ram,sales,pune,1000
+234,kumar,prod,bglore,2000
+403,anu,HR,hyd,3000
+236,leo,sales,bglore,4000
+894,vijay,prod,chennai,5000
+953,bibu,sales,mumbai,6500
+563,theeb,prod,noida,8950
+karthikeyan@example:~$ grep hr emp.csv
+karthikeyan@example:~$
+karthikeyan@example:~$ grep -i hr emp.csv
+403,anu,HR,hyd,3000
+karthikeyan@example:~$ ps -e|grep bash
+ 3308 pts/1    00:00:00 bash
+karthikeyan@example:~$
+karthikeyan@example:~$ ps -e|grep mysql
+karthikeyan@example:~$
+karthikeyan@example:~$ ps -e|grep system
+    1 ?        00:00:11 systemd
+  299 ?        00:00:05 systemd-journal
+ 2386 ?        00:00:00 systemd
+ 2659 ?        00:00:00 systemd
+ 8018 ?        00:00:00 systemd-timesyn
+ 8019 ?        00:00:00 systemd-logind
+ 8021 ?        00:00:00 systemd-udevd
+ 8025 ?        00:00:00 systemd-resolve
+karthikeyan@example:~$ ps -e|grep -i system
+    1 ?        00:00:11 systemd
+  299 ?        00:00:05 systemd-journal
+ 2386 ?        00:00:00 systemd
+ 2659 ?        00:00:00 systemd
+ 8018 ?        00:00:00 systemd-timesyn
+ 8019 ?        00:00:00 systemd-logind
+ 8021 ?        00:00:00 systemd-udevd
+ 8025 ?        00:00:00 systemd-resolve
+karthikeyan@example:~$
+karthikeyan@example:~$ ps -e|head|grep system|wc -l
+1
+karthikeyan@example:~$ ps -e|head
+  PID TTY          TIME CMD
+    1 ?        00:00:11 systemd
+    2 ?        00:00:00 kthreadd
+    3 ?        00:00:00 rcu_gp
+    4 ?        00:00:00 rcu_par_gp
+    6 ?        00:00:00 kworker/0:0H-kb
+    9 ?        00:00:00 mm_percpu_wq
+   10 ?        00:00:10 ksoftirqd/0
+   11 ?        00:00:01 rcu_sched
+   12 ?        00:00:00 migration/0
+karthikeyan@example:~$ ps -e|head|grep system
+    1 ?        00:00:11 systemd
+karthikeyan@example:~$ ps -e|head|grep system|wc -l
+1
+karthikeyan@example:~$
+
+grep -option <pattern>  inputFile
+
+-option
+--------
+-i   <== ignore the pattern
+-n   <== matched pattern line number
+-c   <== matched pattern count
+-v   <== not matching a pattern
+-e (or) -E   <== extended pattern
+-f <== file based search
+
+-l <== list a matched pattern filename
+
+
+karthikeyan@example:/etc$ grep urandom *.conf
+apg.conf:#APG_PARM="-c /dev/urandom  -m 8 -x 14  -M SNCL  -t"
+apg.conf:#APG_PARM="-c /dev/urandom  -m 8 -x 14  -M NCL  -t"
+apg.conf:#APG_PARM="-c /dev/urandom  -m 20 -x 20  -a 1 -M SNCL"
+apg.conf:APG_PARM="-c /dev/urandom  -m 8 -x 14  -M SNCL  -t"
+karthikeyan@example:/etc$
+karthikeyan@example:/etc$
+karthikeyan@example:/etc$ grep -l urandom *.conf
+apg.conf
+####################################################################
+
+cut 
+----
+ ->remove the chars or field
+                         |=>based on the field sep
+
+
+
+
+karthikeyan@example:~$ cat emp.csv
+101,ram,sales,pune,1000
+234,kumar,prod,bglore,2000
+403,anu,HR,hyd,3000
+236,leo,sales,bglore,4000
+894,vijay,prod,chennai,5000
+953,bibu,sales,mumbai,6500
+563,theeb,prod,noida,8950
+karthikeyan@example:~$ cut -c 5 emp.csv
+r
+k
+a
+l
+v
+b
+t
+karthikeyan@example:~$ cut -c 1,5 emp.csv
+1r
+2k
+4a
+2l
+8v
+9b
+5t
+karthikeyan@example:~$ cut -c 1-5 emp.csv
+101,r
+234,k
+403,a
+236,l
+894,v
+953,b
+563,t
+karthikeyan@example:~$ cut -d, -f 1 emp.csv
+101
+234
+403
+236
+894
+953
+563
+karthikeyan@example:~$ cut -d, -f 2 emp.csv
+ram
+kumar
+anu
+leo
+vijay
+bibu
+theeb
+karthikeyan@example:~$ cut -d, -f 4 emp.csv
+pune
+bglore
+hyd
+bglore
+chennai
+mumbai
+noida
+karthikeyan@example:~$ cut -d, -f 2,4 emp.csv
+ram,pune
+kumar,bglore
+anu,hyd
+leo,bglore
+vijay,chennai
+bibu,mumbai
+theeb,noida
+karthikeyan@example:~$ cut -d, -f 2-4 emp.csv
+ram,sales,pune
+kumar,prod,bglore
+anu,HR,hyd
+leo,sales,bglore
+vijay,prod,chennai
+bibu,sales,mumbai
+theeb,prod,noida
+karthikeyan@example:~$ grep sales emp.csv |cut -d, -f 2
+ram
+leo
+bibu
+karthikeyan@example:~$ grep sales emp.csv
+101,ram,sales,pune,1000
+236,leo,sales,bglore,4000
+953,bibu,sales,mumbai,6500
+karthikeyan@example:~$
+
+##################################################
+sort
+----
+sort filename
+
+karthikeyan@example:~$
+karthikeyan@example:~$ cat nos
+56
+789
+12356
+95
+43
+8
+karthikeyan@example:~$
+karthikeyan@example:~$ cat users
+leo
+paul
+arun
+raj
+tom
+bibu
+karthikeyan@example:~$ sort users
+arun
+bibu
+leo
+paul
+raj
+tom
+karthikeyan@example:~$ sort -r users
+tom
+raj
+paul
+leo
+bibu
+arun
+karthikeyan@example:~$ cat nos
+56
+789
+12356
+95
+43
+8
+karthikeyan@example:~$ sort nos
+12356
+43
+56
+789
+8
+95
+karthikeyan@example:~$ sort -n nos
+8
+43
+56
+95
+789
+12356
+karthikeyan@example:~$ sort -nr nos
+12356
+789
+95
+56
+43
+8
+#######################################
+
+redirection
+-----------
+
+command {Enter}
+  \__ result
+	 |--->STDOUT => FD=1 
+	 |--->STDERR => FD=2
+		---------------//display to monitor
+
+command >newFile
+	|___________Create a newFile and write command(results) to newFile
+		   ^^^^^^^^^^^^^^^^^
+			|->if file already exists ->overwrite
+
+command FD>newFile
+	|
+	|__default FD value is: 1
+
+date >d1.log same as  date 1>d1.log
+------------          ==============
+
+dateee 2>err.log
+
+command >result.log 2>err.log
+
+karthikeyan@example:~/DAY3$ uptimeee >LB.log 2>err.log
+karthikeyan@example:~/DAY3$
+karthikeyan@example:~/DAY3$ cat err.log
+uptimeee: command not found
+karthikeyan@example:~/DAY3$
+
+
+Redirect command results and error both into single log file
+		--------     -----           -----------
+
+ command >result.log 2>&1
+==============================================================
+Task:
+
+ -> create a new file called sysinfo.txt ( vi sysinfo.txt)
+ |
+     vi sysinfo.txt
+     echo "display kernel details:-"
+     uname -a
+     echo 
+     echo "Total no.of process:-"
+     ps -e|wc -l
+     echo
+     echo "Current CPU Loadbalance:-"
+     uptime
+     echo
+     sleep 3
+     echo "--- Thank you ---"
+     :wq  <== save and exit
+
+ -> Give execute permission to sysinfo.txt file (chmod a+x sysinfo.txt)
+ |
+ -> execute sysinfo.txt file and redirect execution results to externalfile (ex: result.log)
+ ->  ./sysinfo.txt >result.log 2>&1
+
+
+karthikeyan@example:~/DAY3$ cat sysinfo.txt
+echo "display kernel details:-"
+uname -a
+echo
+echo "Total no.of process:-"
+ps -e|wc -l
+echo
+echo "Current CPU Loadbalance:-"
+uptime
+echo
+sleep 3
+echo "--- Thank you ---"
+
+karthikeyan@example:~/DAY3$ ./sysinfo.txt >result.log 2>&1
+########################################################################
+
+tar
+----
+  ->create a backup
+  ->list 
+  ->extract an existing backup
+
+create
+------
+tar -cvf <backup.tar> <list of files>
+
+karthikeyan@example:~$ tar -cvf B1.tar DAY3 project test1.txt ERP
+DAY3/
+..
+
+list
+----
+tar -tvf B1.tar
+
+karthikeyan@example:~/D1$ tar -tvf B1.tar
+drwxrwxr-x karthikeyan/karthikeyan 0 2025-01-16 19:02 DAY3/
+-rw-rw-r-- karthikeyan/karthikeyan 0 2025-01-16 18:29 DAY3/LB.log
+...
+->extract an existing backup
+-------------------------------
+karthikeyan@example:~/D1$ tar -xvf B1.tar
+DAY3/
+DAY3/LB.log
+DAY3/p1.log
+DAY3/r1.log
+DAY3/process.log
+...
+
+karthikeyan@example:~/D1$ ls
+B1.tar  DAY3  ERP  project  test1.txt
+karthikeyan@example:~/D1$
+#####################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
