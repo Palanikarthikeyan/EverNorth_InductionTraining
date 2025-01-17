@@ -1,0 +1,133 @@
+grep - search a pattern - search only
+----
+grep -option pattern inputFile
+
+pattern ->Text (or) string
+Action -->print (or) display
+
+awk - search and formatted style report
+---   =======
+
+awk -option '/pattern/{Action}' inputFile
+--- ======= |_________________|
+pattern ->Text (or) string
+Action -->print (or) display
+
+1. read - read a input data from FILE (or) PIPE - line by line
+2. split - split each input into multiple values 
+           based on -F<sep> ; default field sep is space 
+3. search a pattern
+4. action - print
+
+awk supports arithmetic operations
+	     ----------------------
+		+ - * / % 
+	     relational and logical operators
+		|		|
+	== != < <= > >=		&& || 
+-------------------------------------------------------------------------
+sed - stream editor
+----
+sed 's/oldpattern/newstring/' inputFile
+     |
+    substitute
+---------------------------------------------------------------------------
+Task:
+
+ ->filter top 30 process from process list
+ ->display processName and processID
+		|
+		|->system =>INIT 
+			    -----
+
+ps -e (or) ps -A
+
+ps -e|head -n 30
+
+ps -e|head -n 30|sed 's/system/init/'
+
+ps -e|head -n 30|sed 's/system/init/'|awk '{OFS=":";print $NF,$1}'
+
+
+ps -e|head -n 30|sed 's/system/init/'|awk '{OFS=":";print $NF,$1}' >init.log
+
+##############################################################################
+
+
+
+/etc/passwd - config file - user details
+
+useradd <userName>
+
+Task
+-----
+|->root@host~]#  useradd  test1
+		 passwd test1
+		 |
+		 grep test1 /etc/passwd
+		 |
+		 id test1 {Enter}
+		 |
+|-> open new terminal -------------->  su - test1
+				       test1@host~]$ python3 {Enter}
+				       >>>
+				       >>>
+|
+root@host~]# top
+
+u
+|-->
+
+############################################################################
+Software Package Management
+----------------------------
+RedHat Linux
+ |
+ |-> yum install <packageName>
+ |-> yum update <package>
+ |-> yum remove <package>
+ |-> yum list installed 
+
+RHL8 and above version
+------------------------
+ |-> dnf install <packageName>
+ |-> dnf update <package>
+ |-> dnf remove <package>
+ |-> dnf list installed 
+
+Debian Linux 
+-------------
+apt-get install <packageName>
+apt-get remove <packageName>
+apt-get update <packageName>
+
+ubuntu 20.x updated version
+apt install <packageName>
+--------------------------------
+
+service
+-------
+|->systemd_unit file (filename.service)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
