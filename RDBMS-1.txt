@@ -1,0 +1,57 @@
+user@host~]$ su - {Enter}
+Enter a password: <type your root password>
+|
+|
+root@host~]# 
+
+sudo apt update
+
+sudo apt install mysql-server
+
+sudo systemctl start mysql 
+
+sudo systemctl enable mysql
+
+sudo mysql_secure_installation
+
+sudo systemctl status mysql
+
+sudo mysql -u root -p
+
+sudo mysql -u root -p
+
+mysql> CREATE USER 'username'@'%' IDENTIFIED BY 'password';
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'username'@'%' WITH GRANT OPTION;
+
+mysql> FLUSH PRIVILEGES;
+-------------------------------------------------------------------------
+mysql> select version();
+
+mysql> select now();
+
+mysql> select user();
+mysql> quit;
+------------------------------------------------------------------
+root@host~]# mysql -u <userName> -p {enter}
+Enter a password: <username-Password> {Enter}
+|
+mysql>
+
+mysql> select user(); {Enter}
+
+mysql> create database product;
+mysql> show databases;
+mysql> use product; # must do that explicitly
+|
+mysql> CREATE TABLE p1 (pname VARCHAR(20), powner VARCHAR(20),pcost INT);
+|
+To verify that your table was created the way you expected, use a DESCRIBE statement:
+|
+mysql> insert into p1 values("prodA","userA",1000);
+|
+mysql> select *from p1;
+|
+=================================================================================
+Kernel parameters 
+====================
